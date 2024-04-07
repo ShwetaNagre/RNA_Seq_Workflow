@@ -77,3 +77,17 @@ ggplot(data_pca, aes(PC1,PC2,color=Group, fill=Group))+geom_point(size=2,shape=2
   guides(shape = guide_legend(ncol =1,override.aes=list(fill="grey",color="grey")),color = guide_legend(ncol =1),fill = guide_legend(ncol =1))
 
 dev.off()
+
+
+########################################################
+
+## Differential Expression
+
+library(DESeq2)
+
+Design=read.delim("/home/shweta/Downloads/Covid_test/Metadata.csv",row.names = 1)
+
+ds=DESeqDataSetFromMatrix(countData = ProtCode,colData = design,design = ~Group)
+ds=DESeq(ds)
+res=results(ds,c("Group","Covid","HC"),independentFiltering = FALSE)
+write.table(res,file="/home/shweta/Downloads/Covid_test/Covid_vs_HC.txt",sep="\t", quote=FALSE,col.names = NA)
